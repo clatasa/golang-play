@@ -22,6 +22,7 @@ type Hole struct {
 	Created string `json:"created"`
 }
 
+//This is to allow us to swap out our DB repo for something else to test with
 type Repository interface {
 	gopherManager(offset int, limit int) ([]Gopher, error)
 }
