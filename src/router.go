@@ -5,14 +5,13 @@ import (
 	"net/http"
 )
 
-type Route struct {
-	Name        string
-	Method      string
-	Pattern     string
-	HandlerFunc http.HandlerFunc
-}
+/*
+	Like it sounds, this handles binding of a particular request route to a method
 
-type Routes []Route
+	/gophers GET -> GetGophers
+	/gophers POST -> MakeGophers
+
+*/
 
 func NewRouter() *mux.Router {
 
@@ -27,6 +26,15 @@ func NewRouter() *mux.Router {
 
 	return router
 }
+
+type Route struct {
+	Name        string
+	Method      string
+	Pattern     string
+	HandlerFunc http.HandlerFunc
+}
+
+type Routes []Route
 
 var routes = Routes{
 	Route{

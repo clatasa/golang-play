@@ -8,22 +8,21 @@ import (
 )
 
 /*
-create table gopher (
-  id BIGSERIAL,
-  name TEXT,
-  born TIMESTAMP,
-  details JSONB,
-  PRIMARY KEY (id)
-);
+	Here we connect to the DB and do the work of either fetching gophers and their holes or creating them.
 
-create table hole (
-  id BIGSERIAL ,
-  name TEXT,
-  created TIMESTAMP,
-  gopher_id BIGINT REFERENCES gopher(id),
-  PRIMARY KEY (id)
-);
+	Example query: SELECT g.id, g.name, g.born, g.details, h.id as hid, h.name as holename, created from gopher g left outer join holes h on g.id=h.gopher_id order by id offset 0 limit 50
 
+ id |   name   |            born            |               details             | hid | holename |          created
+----+----------+----------------------------+-----------------------------------+-----+----------+----------------------------
+  1 | biguy    | 2018-02-11 16:53:45.356687 | {"isfast": "yes", "isbad": "yes"} |     |          |
+  2 | holeking | 2018-02-11 21:26:53.32964  | {"isfast": "yes", "isbad": "yes"} |   1 | bigun    | 2018-02-19 20:40:49.091865
+  2 | holeking | 2018-02-11 21:26:53.32964  | {"isfast": "yes", "isbad": "yes"} |   2 | bigun2   | 2018-02-19 20:41:01.224199
+  3 | slowpoke | 2018-02-11 21:37:46.958885 | {"isfast": "no", "isbad": "yes"}  |     |          |
+
+*/
+
+/*
+	This struct is required to deal with getting Gophers that have no Holes
 */
 type SqlHole struct {
 	Id      sql.NullInt64
@@ -60,6 +59,8 @@ func (gopherMgr *dbGopherManager) findGophers(offset int, limit int, gopherName 
 	}
 
 	queryString = queryString + fmt.Sprintf("order by id offset %d limit %d ", offset, limit)
+
+	Info.Println(queryString)
 
 	rows, err := db.Query(queryString)
 	if err != nil {

@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+/*
+	Here we manage stuff from the request and (if it's cool) pass it to the Repository
+*/
+
 var gopherManager = &dbGopherManager{}
 
 func GetGophers(w http.ResponseWriter, r *http.Request) {
@@ -43,20 +47,20 @@ func MakeGophers(w http.ResponseWriter, r *http.Request) {
 	if err := r.Body.Close(); err != nil {
 		panic(err)
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err := json.Unmarshal(body, &gopher); err != nil {
 
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(422) // unprocessable entity
+		w.WriteHeader(http.StatusUnprocessableEntity) // unprocessable entity
+
 		if err := json.NewEncoder(w).Encode(err); err != nil {
 			panic(err)
 		}
 	} else {
 
-		gopherId := gopherManager.createGopher(gopher)
+		gopher.Id = int(gopherManager.createGopher(gopher))
 
-		gopher.Id = int(gopherId)
+		w.WriteHeader(http.StatusCreated)
 
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		if err := json.NewEncoder(w).Encode(gopher); err != nil {
 			panic(err)
 		}

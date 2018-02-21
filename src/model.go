@@ -1,5 +1,13 @@
 package main
 
+/*
+This is a simple model file defining our structs.
+You have a Gopher can have many Holes:
+
+Gopher (1) - (*) Holes
+
+*/
+
 type Gopher struct {
 	Id      int    `json:"id"`
 	Name    string `json:"name"`
@@ -8,16 +16,12 @@ type Gopher struct {
 	Holes   []Hole `json:"holes"`
 }
 
-type Gophers []Gopher
-
 type Hole struct {
 	Id      int    `json:"id"`
 	Name    string `json:"name"`
 	Created string `json:"created"`
 }
 
-type Holes []Hole
-
 type Repository interface {
-	gopherManager(offset int, limit int) (Gophers, error)
+	gopherManager(offset int, limit int) ([]Gopher, error)
 }

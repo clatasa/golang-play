@@ -6,6 +6,11 @@ import (
 	"os"
 )
 
+/*
+	Here we actually start up the server as well as configuring some of the log file details.
+
+	Server ports and log file names are hard coded but should come from somewhere else.
+*/
 var (
 	Info *log.Logger
 )
